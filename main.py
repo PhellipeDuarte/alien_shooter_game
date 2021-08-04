@@ -77,7 +77,7 @@ class Ship:
             laser.move(vel)
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
-            elif laser.collison(obj):
+            elif laser.collision(obj):
                 obj.health -= 10
                 self.lasers.remove(laser)
 
@@ -138,6 +138,12 @@ class Enemy(Ship):
     # Método que realiza a movimentação do inimigo
     def move(self, vel):
         self.y += vel
+    
+    def shoot(self):
+        if self.cool_down_counter == 0:
+            laser = Laser(self.x - 20, self.y, self.laser_img)
+            self.lasers.append(laser)
+            self.cool_down_counter = 1
 
 # Função que analisa as colisões dos projéteis
 def collide(obj1, obj2):
@@ -156,7 +162,7 @@ def main():
     lost_font = pygame.font.SysFont("comicsans", 90)
     player_vel = 4
     enemy_vel = 2
-    laser_vel = -5
+    laser_vel = 5
 
     enemies = []
     wave_lenght = 5
@@ -236,18 +242,29 @@ def main():
             player.y += player_vel
 
         # Clicando espaço para atirar
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] or keys[pygame.K_LSHIFT]:
             player.shoot()
 
         # Usa o método mover
-        for enemy in enemies:
+        for enemy in enemies[:]:
             enemy.move(enemy_vel)
             enemy.move_lasers(laser_vel, player)
+
+            # Forma de tiro dos inimigos
+            if random.randrange(0, 2*FPS) == 1:
+                enemy.shoot()
+            
+            # Condicional que percebe se algum inimigo colidiu com a nave aliada
+            if collide(enemy, player):
+                player.health -= 10
+                enemies.remove(enemy)
+
             # Condicional que percebe se algum inimigo passou pela nave aliada
-            if enemy.y + enemy.get_height() > HEIGHT:
+            elif enemy.y + enemy.get_height() > HEIGHT:
                 lives -= 1
                 enemies.remove(enemy)
 
-        player.move_lasers(laser_vel, enemies)
+
+        player.move_lasers(-laser_vel, enemies)
 
 main()
