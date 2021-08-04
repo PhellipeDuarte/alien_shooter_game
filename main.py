@@ -28,6 +28,30 @@ YELLOW_LASER = pygame.image.load(os.path.join("assets", "pixel_laser_yellow.png"
 # Background
 BG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "background_black.png")), (WIDTH, HEIGHT))
 
+# Classe Laser que representa os disparos das naves
+class Laser:
+    def __init__(self, x, y, img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.mask = pygame.mask.from_surface(self.img)
+
+    # Método para desenhar o laser na tela
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
+
+    # Método para mover o laser na tela
+    def move(self, vel):
+        self.y += vel
+    
+    # Método para verificar se o disparo está fora da tela
+    def off_screen(self, height):
+        return self.y <= height and self.y >= 0
+
+    # Método para verificar se o disparo colide com alguma nave
+    def collison(self, obj):
+        return collide(obj, self)
+
 # Classe abstrata "Nave"
 class Ship:
     def __init__(self, x, y, health=100):
@@ -74,6 +98,13 @@ class Enemy(Ship):
     # Método que realiza a movimentação do inimigo
     def move(self, vel):
         self.y += vel
+
+# Função que analisa as colisões dos projéteis
+def collide(obj1, obj2):
+    offset_x = obj2.x - obj1.x
+    offset_y = obj2.y - obj1.y
+    
+    return obj1.mask.overlap(obj2, (offset_x, offset_y)) != None
 
 # Definindo o loop principal de execução
 def main():
