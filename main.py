@@ -123,6 +123,16 @@ class Player(Ship):
                         objs.remove(obj)
                         self.lasers.remove(laser)
 
+    # Método que desenha a barra de vida do player na tela
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+    
+    # Método que mostra a barra de vida do player
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+
 # Classe dos inimigos, herda da classe abstrata "Nave"
 class Enemy(Ship):
     COLOR_MAP = {
@@ -226,19 +236,19 @@ def main():
         keys = pygame.key.get_pressed()
 
         # Indo para a esquerda
-        if keys[pygame.K_a] and player.x + player_vel > 0:
+        if (keys[pygame.K_a] or keys[pygame.K_LEFT]) and player.x + player_vel > 0:
             player.x -= player_vel
 
         # Indo para a direita
-        if keys[pygame.K_d] and player.x + player_vel < WIDTH - player.get_width():
+        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and player.x + player_vel < WIDTH - player.get_width():
             player.x += player_vel
 
         # Indo para cima
-        if keys[pygame.K_w] and player.y + player_vel > 0:
+        if (keys[pygame.K_w] or keys[pygame.K_UP]) and player.y + player_vel > 0:
             player.y -= player_vel
 
         # Indo para baixo
-        if keys[pygame.K_s] and player.y + player_vel < HEIGHT - player.get_height():
+        if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and player.y + player_vel < HEIGHT - player.get_height():
             player.y += player_vel
 
         # Clicando espaço para atirar
