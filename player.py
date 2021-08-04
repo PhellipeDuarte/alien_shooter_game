@@ -10,6 +10,7 @@ class Player(Ship):
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
 
+    # Método que move os projéteis atirados
     def move_lasers(self, vel, objs):
         self.cooldown()
         for laser in self.lasers:
@@ -20,7 +21,8 @@ class Player(Ship):
                 for obj in objs:
                     if laser.collision(obj):
                         objs.remove(obj)
-                        self.lasers.remove(laser)
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
 
     # Método que desenha a barra de vida do player na tela
     def draw(self, window):

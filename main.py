@@ -1,6 +1,4 @@
 import pygame
-import os
-import time 
 import random
 from collide import collide
 from enemy import Enemy
@@ -11,23 +9,31 @@ pygame.font.init()
 
 # Definindo o loop principal de execução
 def main():
+
+    # Definindo variáveis de início: a variável de controle run e o FPS (Framerate)
     run = True
     FPS = 300
+
+    # Definindo o level, o número de vidas, a velocidade do player, a velocidade dos inimigos, a velocidade do laser
     level = 0
     lives = 5
-    main_font = pygame.font.SysFont("comicsans", 50)
-    lost_font = pygame.font.SysFont("comicsans", 90)
-    player_vel = 4
+    player_vel = 5
     enemy_vel = 2
     laser_vel = 5
 
+    # Definindo o vetor de inimigos e o tamanho da onda inicial de inimigos
     enemies = []
-    wave_lenght = 5
+    wave_lenght = 4
 
+    # Definindo as fontes
+    main_font = pygame.font.SysFont("comicsans", 30)
+    lost_font = pygame.font.SysFont("comicsans", 90)
+
+    # Iniciando o Player
     player = Player(425, 700)
 
+    # Definindo o Clock, a variável de controle da derrota e a quantidade de tentativas
     clock = pygame.time.Clock()
-
     lost = False
     lost_count = 0
 
@@ -42,14 +48,16 @@ def main():
         WIN.blit(lives_label, (10, 10))
         WIN.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))
 
-        # Desenhando os inimigos na tela
+        # Redesenhando os inimigos na tela
         for enemy in enemies:
             enemy.draw(WIN)
         
+        # Redesenhando o player na tela
         player.draw(WIN)
 
+        # Exibindo mensagem de derrota
         if lost:
-            lost_label = lost_font.render("Você perdeu!!", 1, (255, 255, 255))
+            lost_label = lost_font.render(f"Você perdeu!! Foi derrotado {lost_count} vezes", 1, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
 
         pygame.display.update()
@@ -59,27 +67,31 @@ def main():
         clock.tick(FPS)
         redraw_window()
 
-
+        # Situações em que o player perde o jogo
         if lives <= 0 or player.health <= 0:
             lost = True
             lost_count += 1
         
+        # Condicional que pausa o jogo se esse for perdido
         if lost:
             if lost_count > FPS*3:
                 run = False
             else:
                 continue
 
+        # Forma de dar 'spawn' nos inimigos
         if len(enemies) == 0:
             level += 1
             wave_lenght += 2
+
             for i in range(wave_lenght):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
                 enemies.append(enemy)
 
+        # Evento que encerra o jogo se a janela for fechada
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                quit()
         keys = pygame.key.get_pressed()
 
         # Indo para a esquerda
@@ -121,7 +133,31 @@ def main():
                 lives -= 1
                 enemies.remove(enemy)
 
-
+        # Movimentando os lasers
         player.move_lasers(-laser_vel, enemies)
 
-main()
+# Função que adiciona um menu antes de iniciar o jogo
+def main_menu():
+    run = True
+    while run:
+
+        # Exibindo a mensagem de início
+        WIN.blit(BG, (0,0))
+        title_font = pygame.font.SysFont("comicsans", 60)
+        title_label = title_font.render("Pressione a barra de espaço para começar", 1, (255,255,255))
+        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 350))
+
+        keys = pygame.key.get_pressed()
+        pygame.display.update()
+
+        # Aguarda o início do jogo ao ser pressionada a tecla espaço
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if keys[pygame.K_SPACE]:
+                main()
+    # Finaliza o jogo    
+    pygame.quit()
+
+
+main_menu()

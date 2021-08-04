@@ -19,6 +19,7 @@ class Enemy(Ship):
     def move(self, vel):
         self.y += vel
     
+    # Método que realiza o tiro dos inimigos
     def shoot(self):
         if self.cool_down_counter == 0:
             laser = Laser(self.x - 20, self.y, self.laser_img)
