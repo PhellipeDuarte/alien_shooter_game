@@ -12,6 +12,7 @@ def main():
 
     # Definindo variáveis de início: a variável de controle run e o FPS (Framerate)
     run = True
+    paused = False    
     FPS = 300
 
     # Definindo o level, o número de vidas, a velocidade do player, a velocidade dos inimigos, a velocidade do laser
@@ -42,7 +43,7 @@ def main():
         WIN.blit(BG, (0, 0))
 
         # Escrevendo o texto na tela
-        lives_label = main_font.render(f"Lives: {lives}", 1, (255, 255, 255))
+        lives_label = main_font.render(f"Vidas: {lives}", 1, (255, 255, 255))
         level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
 
         WIN.blit(lives_label, (10, 10))
@@ -57,7 +58,7 @@ def main():
 
         # Exibindo mensagem de derrota
         if lost:
-            lost_label = lost_font.render(f"Você perdeu!! Foi derrotado {lost_count} vezes", 1, (255, 255, 255))
+            lost_label = lost_font.render(f"Você perdeu!!", 1, (255, 255, 255))
             WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
 
         pygame.display.update()
@@ -65,8 +66,8 @@ def main():
 
     while run:
         clock.tick(FPS)
-        redraw_window()
-
+        redraw_window()    
+ 
         # Situações em que o player perde o jogo
         if lives <= 0 or player.health <= 0:
             lost = True
@@ -82,7 +83,14 @@ def main():
         # Forma de dar 'spawn' nos inimigos
         if len(enemies) == 0:
             level += 1
-            wave_lenght += 2
+
+            # Incrementando a quantidade de inimigos por onda
+            if wave_lenght < 15:
+                wave_lenght += 1
+
+            # Incrementando a velocidade do player em leveis múltiplos de três
+            if level % 3 == 0:
+                player_vel += 2
 
             for i in range(wave_lenght):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
