@@ -6,19 +6,19 @@ from player import Player
 from constants import WIDTH, HEIGHT, WIN, BG
 
 pygame.font.init()
+pygame.display.set_caption("Alien Shooters")
 
 # Definindo o loop principal de execução
 def main():
 
     # Definindo variáveis de início: a variável de controle run e o FPS (Framerate)
     run = True
-    paused = False    
-    FPS = 300
+    FPS = 100
 
     # Definindo o level, o número de vidas, a velocidade do player, a velocidade dos inimigos, a velocidade do laser
     level = 0
     lives = 5
-    player_vel = 5
+    player_vel = 3
     enemy_vel = 2
     laser_vel = 5
 
@@ -91,6 +91,8 @@ def main():
             # Incrementando a velocidade do player em leveis múltiplos de três
             if level % 3 == 0:
                 player_vel += 2
+                enemy_vel += 1
+                player.reduce_cooldown()
 
             for i in range(wave_lenght):
                 enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))

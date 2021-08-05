@@ -4,7 +4,6 @@ import os
 # Setando a janela principal
 WIDTH, HEIGHT = 900, 900
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Space Invaders")
 
 # Carregando as imagens
 
