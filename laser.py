@@ -16,10 +16,10 @@ class Laser:
     # Método para mover o laser na tela
     def move(self, vel):
         self.y += vel
-    
+
     # Método para verificar se o disparo está fora da tela
     def off_screen(self, height):
-        return not(self.y <= height and self.y >= 0)
+        return not (self.y <= height and self.y >= 0)
 
     # Método para verificar se o disparo colide com alguma nave
     def collision(self, obj):

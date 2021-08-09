@@ -1,6 +1,7 @@
 import pygame
 from ship import Ship
 from constants import HEIGHT, YELLOW_SPACE_SHIP, YELLOW_LASER
+
 # Classe do player, herda da classe abstrata "Nave"
 class Player(Ship):
     def __init__(self, x, y, health=100):
@@ -28,8 +29,26 @@ class Player(Ship):
     def draw(self, window):
         super().draw(window)
         self.healthbar(window)
-    
+
     # Método que mostra a barra de vida do player
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
-        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+        pygame.draw.rect(
+            window,
+            (255, 0, 0),
+            (
+                self.x,
+                self.y + self.ship_img.get_height() + 10,
+                self.ship_img.get_width(),
+                10,
+            ),
+        )
+        pygame.draw.rect(
+            window,
+            (0, 255, 0),
+            (
+                self.x,
+                self.y + self.ship_img.get_height() + 10,
+                self.ship_img.get_width() * (self.health / self.max_health),
+                10,
+            ),
+        )

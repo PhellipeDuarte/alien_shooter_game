@@ -52,30 +52,29 @@ def main():
         # Redesenhando os inimigos na tela
         for enemy in enemies:
             enemy.draw(WIN)
-        
+
         # Redesenhando o player na tela
         player.draw(WIN)
 
         # Exibindo mensagem de derrota
         if lost:
             lost_label = lost_font.render(f"Você perdeu!!", 1, (255, 255, 255))
-            WIN.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 350))
+            WIN.blit(lost_label, (WIDTH / 2 - lost_label.get_width() / 2, 350))
 
         pygame.display.update()
 
-
     while run:
         clock.tick(FPS)
-        redraw_window()    
- 
+        redraw_window()
+
         # Situações em que o player perde o jogo
         if lives <= 0 or player.health <= 0:
             lost = True
             lost_count += 1
-        
+
         # Condicional que pausa o jogo se esse for perdido
         if lost:
-            if lost_count > FPS*3:
+            if lost_count > FPS * 3:
                 run = False
             else:
                 continue
@@ -95,7 +94,11 @@ def main():
                 player.reduce_cooldown()
 
             for i in range(wave_lenght):
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["red", "blue", "green"]))
+                enemy = Enemy(
+                    random.randrange(50, WIDTH - 100),
+                    random.randrange(-1500, -100),
+                    random.choice(["red", "blue", "green"]),
+                )
                 enemies.append(enemy)
 
         # Evento que encerra o jogo se a janela for fechada
@@ -109,7 +112,9 @@ def main():
             player.x -= player_vel
 
         # Indo para a direita
-        if (keys[pygame.K_d] or keys[pygame.K_RIGHT]) and player.x + player_vel < WIDTH - player.get_width():
+        if (
+            keys[pygame.K_d] or keys[pygame.K_RIGHT]
+        ) and player.x + player_vel < WIDTH - player.get_width():
             player.x += player_vel
 
         # Indo para cima
@@ -117,7 +122,9 @@ def main():
             player.y -= player_vel
 
         # Indo para baixo
-        if (keys[pygame.K_s] or keys[pygame.K_DOWN]) and player.y + player_vel < HEIGHT - player.get_height():
+        if (
+            keys[pygame.K_s] or keys[pygame.K_DOWN]
+        ) and player.y + player_vel < HEIGHT - player.get_height():
             player.y += player_vel
 
         # Clicando espaço para atirar
@@ -130,9 +137,9 @@ def main():
             enemy.move_lasers(laser_vel, player)
 
             # Forma de tiro dos inimigos
-            if random.randrange(0, 2*FPS) == 1:
+            if random.randrange(0, 2 * FPS) == 1:
                 enemy.shoot()
-            
+
             # Condicional que percebe se algum inimigo colidiu com a nave aliada
             if collide(enemy, player):
                 player.health -= 10
@@ -146,16 +153,19 @@ def main():
         # Movimentando os lasers
         player.move_lasers(-laser_vel, enemies)
 
+
 # Função que adiciona um menu antes de iniciar o jogo
 def main_menu():
     run = True
     while run:
 
         # Exibindo a mensagem de início
-        WIN.blit(BG, (0,0))
+        WIN.blit(BG, (0, 0))
         title_font = pygame.font.SysFont("comicsans", 60)
-        title_label = title_font.render("Pressione a barra de espaço para começar", 1, (255,255,255))
-        WIN.blit(title_label, (WIDTH/2 - title_label.get_width()/2, 350))
+        title_label = title_font.render(
+            "Pressione a barra de espaço para começar", 1, (255, 255, 255)
+        )
+        WIN.blit(title_label, (WIDTH / 2 - title_label.get_width() / 2, 350))
 
         keys = pygame.key.get_pressed()
         pygame.display.update()
@@ -166,7 +176,7 @@ def main_menu():
                 run = False
             if keys[pygame.K_SPACE]:
                 main()
-    # Finaliza o jogo    
+    # Finaliza o jogo
     pygame.quit()
 
 
